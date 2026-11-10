@@ -1,0 +1,1 @@
+# Callee code. Listens, validates INVITE, opens the UDP receiver, and sends ACCEPT

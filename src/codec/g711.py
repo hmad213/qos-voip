@@ -1,0 +1,1 @@
+# implements mew law in numpy.

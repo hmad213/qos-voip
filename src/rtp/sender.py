@@ -1,0 +1,1 @@
+# runs the sending loop. Send data according to dixed times

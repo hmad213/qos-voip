@@ -1,0 +1,1 @@
+This folder is for reading and writing audio from and to WAV format
