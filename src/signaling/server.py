@@ -31,21 +31,22 @@ async def handle_client(reader: asyncio.StreamReader, writer: asyncio.StreamWrit
             await writer.drain()
             return
         if current_call is not None:
-            writer.write(encode(Reject(message.call_id), "Server busy"))
+            writer.write(encode(Reject(message.call_id, "Server busy")))
             await writer.drain()
             return
         if message.codec != CODEC_NAME:
-            writer.write(encode(Reject(message.call_id), f"Codec not supported: {message.codec}"))
+            writer.write(encode(Reject(message.call_id, f"Codec not supported: {message.codec}")))
             await writer.drain()
             return
         if message.packet_time != PACKET_TIME:
-            writer.write(encode(Reject(message.call_id), f"Packet time not supported: {message.packet_time}"))
+            writer.write(encode(Reject(message.call_id, f"Packet time not supported: {message.packet_time}")))
             await writer.drain()
             return
 
         current_call = message.call_id
         try:
-            writer.write(encode(Accept(message.call_id, RTP_PORT)))
+            writer.write(encode(Accept(message.call_id, rtp_port=RTP_PORT)))
+            await writer.drain()
             print(f"Call {message.call_id} accepted!")
 
             while True:
@@ -75,5 +76,9 @@ async def handle_client(reader: asyncio.StreamReader, writer: asyncio.StreamWrit
         
 async def run()->None:
     server = await asyncio.start_server(handle_client, "0.0.0.0", TCP_PORT)
+    print("Server listening")
     async with server:
         await server.serve_forever()
+
+if __name__ == "__main__":
+    asyncio.run(run())
